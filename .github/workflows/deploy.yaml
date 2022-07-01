@@ -30,7 +30,7 @@ jobs:
           heroku config:set DB_NAME=${{secrets.DB_NAME}}
           heroku config:set DB_URL=${{secrets.DB_URL}}
           heroku config:set CLAIMS=${{secrets.CLAIMS}}
-          heroku config:set CLAIMS=${{secrets.SECRET}}
+          heroku config:set SECRET=${{secrets.SECRET}}
       - name: push heroku to master
         run: |
           git fetch --unshallow origin
