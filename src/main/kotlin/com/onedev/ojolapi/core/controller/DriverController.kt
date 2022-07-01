@@ -21,7 +21,13 @@ class DriverController {
     private lateinit var userService: UserService
 
     @GetMapping
-    fun getDriver(): BaseResponse<List<Register.User>> {
+    fun getDriver(): BaseResponse<Register.User > {
+        val userId = SecurityContextHolder.getContext().authentication.principal as String
+        return userService.getUserById(userId).toResponse()
+    }
+
+    @GetMapping("/all")
+    fun getAllDriver(): BaseResponse<List<Register.User>> {
         val userId = SecurityContextHolder.getContext().authentication.principal as String
         return userService.getUserByRole(userId, "driver").toResponse()
     }

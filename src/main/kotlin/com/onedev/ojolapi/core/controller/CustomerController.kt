@@ -21,7 +21,13 @@ class CustomerController {
     private lateinit var userService: UserService
 
     @GetMapping
-    fun getCustomer(): BaseResponse<List<Register.User>> {
+    fun getCustomer(): BaseResponse<Register.User > {
+        val userId = SecurityContextHolder.getContext().authentication.principal as String
+        return userService.getUserById(userId).toResponse()
+    }
+
+    @GetMapping("/all")
+    fun getAllCustomer(): BaseResponse<List<Register.User>> {
         val userId = SecurityContextHolder.getContext().authentication.principal as String
         return userService.getUserByRole(userId, "customer").toResponse()
     }
