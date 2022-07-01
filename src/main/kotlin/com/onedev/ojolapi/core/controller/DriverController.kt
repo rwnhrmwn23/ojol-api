@@ -14,30 +14,30 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/user")
-class UserController {
+@RequestMapping("/api/v1/driver")
+class DriverController {
 
     @Autowired
     private lateinit var userService: UserService
 
     @GetMapping
-    fun getUser(): BaseResponse<Register.User> {
+    fun getDriver(): BaseResponse<List<Register.User>> {
         val userId = SecurityContextHolder.getContext().authentication.principal as String
-        return userService.getUserById(userId).toResponse()
+        return userService.getUserByRole(userId, "driver").toResponse()
     }
 
     @PostMapping("/login")
     fun login(
         @RequestBody userLogin: Login.Request
     ): BaseResponse<Login.Response> {
-        return userService.login(userLogin).toResponse()
+        return userService.login(role = "driver", userLogin).toResponse()
     }
 
     @PostMapping("/register")
     fun register(
         @RequestBody userRequest: Register.Request
     ): BaseResponse<Boolean> {
-        return userService.register(userRequest.mapToNewUser()).toResponse()
+        return userService.register(userRequest.mapToNewUser(role = "driver")).toResponse()
     }
 
 }

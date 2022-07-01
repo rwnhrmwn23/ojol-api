@@ -12,15 +12,21 @@ import org.springframework.stereotype.Service
 class UserServiceImpl(
     @Autowired
     private val userRepository: UserRepository
-): UserService {
-    override fun login(userLogin: Login.Request): Result<Login.Response> {
+) : UserService {
+    override fun login(role: String, userLogin: Login.Request): Result<Login.Response> {
         val resultUser = userRepository.getUserByUsername(userLogin.username)
         return resultUser.map {
             val token = JwtConfig.generateToken(it)
             val passwordInDb = it.password
             val passwordInRequest = userLogin.password
+            val roleInDb = it.role
+
             if (passwordInDb == passwordInRequest) {
-                Login.Response(token)
+                if (roleInDb == role) {
+                    Login.Response(token)
+                } else {
+                    throw OjolException("Role Invalid")
+                }
             } else {
                 throw OjolException("Password Invalid")
             }
@@ -40,8 +46,16 @@ class UserServiceImpl(
 
     override fun getUserByUsername(username: String): Result<Register.User> {
         return userRepository.getUserByUsername(username).map {
-            it.password
+            it.password = null
             it
         }
+    }
+
+    override fun getUserByRole(id: String, role: String): Result<List<Register.User>> {
+        val userId = userRepository.getUserById(id)
+        return if (userId.isSuccess)
+            userRepository.getUserByRole(role)
+        else
+            throw OjolException("Token Invalid")
     }
 }

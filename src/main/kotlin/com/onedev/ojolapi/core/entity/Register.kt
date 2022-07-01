@@ -5,10 +5,9 @@ import java.util.UUID
 object Register {
     data class Request(
         val username: String,
-        val password: String,
-        val role: String,
+        val password: String
     ) {
-        fun mapToNewUser(): User {
+        fun mapToNewUser(role: String): User {
             return User.createNewUser(username, password, role)
         }
     }

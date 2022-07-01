@@ -4,8 +4,9 @@ import com.onedev.ojolapi.core.entity.Login
 import com.onedev.ojolapi.core.entity.Register
 
 interface UserService {
-    fun login(userLogin: Login.Request): Result<Login.Response>
+    fun login(role: String, userLogin: Login.Request): Result<Login.Response>
     fun register(user: Register.User): Result<Boolean>
     fun getUserById(id: String): Result<Register.User>
     fun getUserByUsername(username: String): Result<Register.User>
+    fun getUserByRole(id: String, role: String): Result<List<Register.User>>
 }

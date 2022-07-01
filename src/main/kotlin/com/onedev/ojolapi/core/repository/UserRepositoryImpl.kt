@@ -17,10 +17,10 @@ class UserRepositoryImpl(
     private val databaseComponent: DatabaseComponent
 ): UserRepository {
 
+    private val databaseName = System.getenv("DB_NAME")
     private fun getCollection(): MongoCollection<Register.User> {
-        return databaseComponent.database.getDatabase("ojol").getCollection()
+        return databaseComponent.database.getDatabase(databaseName).getCollection()
     }
-
     override fun insertUser(user: Register.User): Result<Boolean> {
         val existingUser = getUserByUsername(user.username)
         return if (existingUser.isSuccess) {
@@ -36,6 +36,10 @@ class UserRepositoryImpl(
 
     override fun getUserByUsername(username: String): Result<Register.User> {
         return getCollection().findOne(Register.User::username eq username).toResult("username $username not found")
+    }
+
+    override fun getUserByRole(role: String): Result<List<Register.User>> {
+        return getCollection().find(Register.User::role eq role).toList().toResult("user with role $role not found")
     }
 
 }
