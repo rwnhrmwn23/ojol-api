@@ -59,4 +59,8 @@ class UserServiceImpl(
         else
             throw OjolException("Token Invalid")
     }
+
+    override fun updateUser(id: String, user: User): Result<User> {
+        return userRepository.updateUser(id, user.name, user.username, user.password.orEmpty(), user.role, user.location.orEmpty())
+    }
 }

@@ -10,4 +10,5 @@ interface UserService {
     fun getUserById(id: String): Result<User>
     fun getUserByUsername(username: String): Result<User>
     fun getUserByRole(id: String, role: String): Result<List<User>>
+    fun updateUser(id: String, user: User): Result<User>
 }

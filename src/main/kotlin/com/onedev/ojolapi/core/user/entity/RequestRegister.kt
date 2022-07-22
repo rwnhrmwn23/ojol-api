@@ -6,6 +6,6 @@ data class RequestRegister(
     val password: String
 ) {
     fun mapToNewUser(role: String): User {
-        return User.createNewUser(name, username, password, role)
+        return User.createNewUser(name, username, password, role, null)
     }
 }

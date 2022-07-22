@@ -9,11 +9,7 @@ import com.onedev.ojolapi.response.BaseResponse
 import com.onedev.ojolapi.utils.toResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/customer")
@@ -46,6 +42,16 @@ class CustomerController {
         @RequestBody userRequest: RequestRegister
     ): BaseResponse<Boolean> {
         return userService.register(userRequest.mapToNewUser(role = "customer")).toResponse()
+    }
+
+    @PutMapping("/update")
+    fun update(
+        @RequestBody user: User,
+    ): BaseResponse<User> {
+        val userId = SecurityContextHolder.getContext().authentication.principal as String
+        user.id = userId
+        user.role = "customer"
+        return userService.updateUser(userId, user).toResponse()
     }
 
 }

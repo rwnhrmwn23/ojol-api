@@ -5,9 +5,11 @@ import com.onedev.ojolapi.core.user.entity.User
 import com.onedev.ojolapi.database.DatabaseComponent
 import com.onedev.ojolapi.exception.OjolException
 import com.onedev.ojolapi.utils.toResult
+import org.bson.conversions.Bson
 import org.litote.kmongo.eq
 import org.litote.kmongo.findOne
 import org.litote.kmongo.getCollection
+import org.litote.kmongo.setValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
@@ -40,6 +42,30 @@ class UserRepositoryImpl(
 
     override fun getUserByRole(role: String): Result<List<User>> {
         return getCollection().find(User::role eq role).toList().toResult("user with role $role not found")
+    }
+
+    override fun updateUser(
+        id: String,
+        name: String,
+        username: String,
+        password: String,
+        role: String,
+        location: String
+    ): Result<User> {
+        val listBson = ArrayList<Bson>()
+        listBson.add(setValue(User::id, id))
+        listBson.add(setValue(User::name, name))
+        listBson.add(setValue(User::username, username))
+        listBson.add(setValue(User::password, password))
+        listBson.add(setValue(User::role, role))
+        listBson.add(setValue(User::location, location))
+
+        val update = getCollection().updateOne(User::id eq id, listBson)
+        return if (update.wasAcknowledged()) {
+            getUserById(id)
+        } else {
+            throw IllegalStateException("Update Gagal")
+        }
     }
 
 }
