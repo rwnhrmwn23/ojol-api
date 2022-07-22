@@ -1,7 +1,7 @@
-package com.onedev.ojolapi.core.repository
+package com.onedev.ojolapi.core.user.repository
 
 import com.mongodb.client.MongoCollection
-import com.onedev.ojolapi.core.entity.Register
+import com.onedev.ojolapi.core.user.entity.User
 import com.onedev.ojolapi.database.DatabaseComponent
 import com.onedev.ojolapi.exception.OjolException
 import com.onedev.ojolapi.utils.toResult
@@ -18,10 +18,10 @@ class UserRepositoryImpl(
 ): UserRepository {
 
     private val databaseName = System.getenv("DB_NAME")
-    private fun getCollection(): MongoCollection<Register.User> {
+    private fun getCollection(): MongoCollection<User> {
         return databaseComponent.database.getDatabase(databaseName).getCollection()
     }
-    override fun insertUser(user: Register.User): Result<Boolean> {
+    override fun insertUser(user: User): Result<Boolean> {
         val existingUser = getUserByUsername(user.username)
         return if (existingUser.isSuccess) {
             throw OjolException("User Exist")
@@ -30,16 +30,16 @@ class UserRepositoryImpl(
         }
     }
 
-    override fun getUserById(id: String): Result<Register.User> {
-        return getCollection().findOne(Register.User::id eq id).toResult()
+    override fun getUserById(id: String): Result<User> {
+        return getCollection().findOne(User::id eq id).toResult()
     }
 
-    override fun getUserByUsername(username: String): Result<Register.User> {
-        return getCollection().findOne(Register.User::username eq username).toResult("username $username not found")
+    override fun getUserByUsername(username: String): Result<User> {
+        return getCollection().findOne(User::username eq username).toResult("username $username not found")
     }
 
-    override fun getUserByRole(role: String): Result<List<Register.User>> {
-        return getCollection().find(Register.User::role eq role).toList().toResult("user with role $role not found")
+    override fun getUserByRole(role: String): Result<List<User>> {
+        return getCollection().find(User::role eq role).toList().toResult("user with role $role not found")
     }
 
 }

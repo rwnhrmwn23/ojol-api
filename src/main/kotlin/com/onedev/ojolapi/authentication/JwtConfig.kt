@@ -1,6 +1,6 @@
 package com.onedev.ojolapi.authentication
 
-import com.onedev.ojolapi.core.entity.Register
+import com.onedev.ojolapi.core.user.entity.User
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
@@ -50,7 +50,7 @@ class JwtConfig : WebSecurityConfigurerAdapter() {
             "/api/ping"
         )
 
-        fun generateToken(user: Register.User) : String {
+        fun generateToken(user: User) : String {
             val claims = System.getenv("CLAIMS")
             val secret = System.getenv("SECRET")
             val subject = user.id
