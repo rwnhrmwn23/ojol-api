@@ -7,6 +7,7 @@
 3. MongoDB
 4. Security with JWT
 5. Role Access
+6. HERE Map Api
 
 ## Deploy Heroku
 
@@ -21,7 +22,7 @@ Note   :
 ojol-api is app name in heroku
 ```
 
-## Base url
+## Base URL API
 
 ```
 https://ojol-api.herokuapp.com/api/
@@ -275,4 +276,111 @@ Response
   }
 }
 ```
+
+### HERE MAP API Location
+
+| Name    | Endpoint                                                                                                    | Method | Bearer token | Body and response                  |
+|---------|-------------------------------------------------------------------------------------------------------------|--------|--------------|------------------------------------|
+| Search  | `v1/location/search?coordinate=-6.2587608,106.97831748&name=rumah`                                          | `GET`  | no           | [example](#search-location---get)  |
+| Reverse | `v1/location/reverse?coordinate=-6.2587608,106.97831748`                                                    | `GET`  | no           | [example](#reverse-location---get) |
+| Route   | `v1/location/route?origin=-6.2587608,106.9783174&destination=-6.2587608,106.97831748&transportMode=scooter` | `GET`  | no           | [example](#route-location---get)   |
+
+### Search Location - GET
+Search location with coordinate point and input user
+
+```
+GET v1/location/search?coordinate=-6.2587608,106.97831748&name=rumah
+```
+
+Response
+
+```json
+{
+  "status": true,
+  "message": "Success",
+  "data": [
+    {
+      "name": "Rumah Bali",
+      "address": {
+        "city": "Bekasi Kota",
+        "country": "Indonesia",
+        "district": "Bekasi Selatan"
+      },
+      "coordinate": {
+        "latitude": -6.25984,
+        "longitude": 106.97533
+      }
+    },
+    {
+      "name": "Rumah Cushy",
+      "address": {
+        "city": "Bekasi Kota",
+        "country": "Indonesia",
+        "district": "Bekasi Selatan"
+      },
+      "coordinate": {
+        "latitude": -6.26001,
+        "longitude": 106.98116
+      }
+    }
+  ]
+}
+```
+
+### Reverse Location - GET
+Get location info with coordinate point
+
+```
+GET v1/location/reverse?coordinate=-6.2587608,106.97831748
+```
+
+Response
+
+```json
+{
+  "status": true,
+  "message": "Success",
+  "data": {
+    "name": "Jalan Bangau, Bekasi Kota 17148, Indonesia",
+    "address": {
+      "city": "Bekasi Kota",
+      "country": "Indonesia",
+      "district": "Bekasi Selatan"
+    },
+    "coordinate": {
+      "latitude": -6.25853,
+      "longitude": 106.97834
+    }
+  }
+}
+```
+
+### Route Location - GET
+Get route polyline between origin and destination location.
+transportMode controls what mode of transport is used for the route. **car** and **scooter** are currently available.
+
+```
+GET v1/location/route?origin=-6.2587608,106.9783174&destination=-6.2587608,106.97831748&transportMode=scooter
+```
+
+Response
+
+```json
+{
+  "status": true,
+  "message": "Success",
+  "data": {
+    "route": [
+      {
+        "latitude": -6.258757,
+        "longitude": 106.978086
+      },
+      {
+        "latitude": -6.258757,
+        "longitude": 106.978086
+      }
+    ]
+  }
+}
+``` 
 
